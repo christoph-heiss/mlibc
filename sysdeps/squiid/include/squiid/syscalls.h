@@ -12,7 +12,8 @@
 #define SQ_SYS_getpid    8
 #define SQ_SYS_mmap      9
 #define SQ_SYS_prctl     10
-#define SQ_SYS_futex     11
+#define SQ_SYS_stat      11
+#define SQ_SYS_futex     12
 
 #define __SQ_SYS_LAST   SQ_SYS_futex
 #define __SQ_SYS_NUM    (__SQ_SYS_LAST+1)

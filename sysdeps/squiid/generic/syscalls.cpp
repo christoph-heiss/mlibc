@@ -159,6 +159,68 @@ int sys_anon_free(void *pointer, size_t size) {
 
 #ifndef MLIBC_BUILDING_RTDL
 
+int sys_stat(fsfd_target fsfdt, int fd, const char *path, int flags, struct stat *statbuf) {
+    int sq_flags = 0;
+
+    switch (fsfdt) {
+    case fsfd_target::path: /* operate on `path` relative to cwd */
+        fd = SQ_STAT_FD_RELCWD;
+        break;
+
+    case fsfd_target::fd: /* operate on file referred by `fd` solely */
+        if (fd == AT_FDCWD) {
+            fd = SQ_STAT_FD_RELCWD;
+        }
+        sq_flags |= SQ_STAT_NOPATH;
+        break;
+
+    case fsfd_target::fd_path: /* operate on `path` relative to fd */
+        /* nothing to do */
+        break;
+
+    default:
+        __ensure(!"Invalid fsfdt value!");
+    }
+
+    if (flags & AT_EMPTY_PATH) {
+        sq_flags |= SQ_STAT_NOPATH;
+    }
+
+    if (flags & AT_SYMLINK_NOFOLLOW) {
+        sq_flags |= SQ_STAT_DONTFOLLOW;
+    }
+
+    __sq_sys_stat sq_statbuf{};
+    int ret = __sq_syscall4(SQ_SYS_stat, fd, (__sq_u64)path, flags, (__sq_u64)&sq_statbuf);
+
+    if (ret != 0) {
+        return -1; /* TODO: translate errno */
+    }
+
+    /* translate our struct __sq_sys_stat to the proper struct stat */
+    statbuf->st_dev     = sq_statbuf.device;
+    statbuf->st_ino     = sq_statbuf.inode;
+    statbuf->st_mode    = sq_statbuf.mode;   /* no need to translate, defined exactly the same */
+    statbuf->st_nlink   = sq_statbuf.nr_hardlinks;
+    statbuf->st_uid     = sq_statbuf.uid;
+    statbuf->st_gid     = sq_statbuf.gid;
+    statbuf->st_rdev    = sq_statbuf.rdevice;
+    statbuf->st_size    = sq_statbuf.size;
+    statbuf->st_blksize = sq_statbuf.blksize;
+    statbuf->st_blocks  = sq_statbuf.nr_blocks;
+
+    statbuf->st_atim.tv_sec  = sq_statbuf.access_time.secs;
+    statbuf->st_atim.tv_nsec = sq_statbuf.access_time.nanosecs;
+
+    statbuf->st_mtim.tv_sec  = sq_statbuf.modification_time.secs;
+    statbuf->st_mtim.tv_nsec = sq_statbuf.modification_time.nanosecs;
+
+    statbuf->st_ctim.tv_sec  = sq_statbuf.creation_time.secs;
+    statbuf->st_ctim.tv_nsec = sq_statbuf.creation_time.nanosecs;
+
+    return 0;
+}
+
 int sys_fork(pid_t *child) {
     int ret = __sq_syscall1(SQ_SYS_clone, 0);
 
@@ -181,6 +243,10 @@ void sys_exit(int code) {
 
 pid_t sys_getpid() {
     return __sq_syscall0(SQ_SYS_getpid);
+}
+
+pid_t sys_getppid() {
+    return 0;
 }
 
 int sys_clock_get(int clock, time_t *secs, long *nanos) {

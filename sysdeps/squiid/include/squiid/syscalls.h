@@ -9,7 +9,7 @@
 #define SQ_SYS_exit      5
 #define SQ_SYS_execve    6
 #define SQ_SYS_clone     7
-#define SQ_SYS_getpid    8
+#define SQ_SYS_getid     8
 #define SQ_SYS_mmap      9
 #define SQ_SYS_prctl     10
 #define SQ_SYS_stat      11

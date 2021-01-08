@@ -242,11 +242,11 @@ void sys_exit(int code) {
 }
 
 pid_t sys_getpid() {
-    return __sq_syscall0(SQ_SYS_getpid);
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PID);
 }
 
 pid_t sys_getppid() {
-    return 0;
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PPID);
 }
 
 int sys_clock_get(int clock, time_t *secs, long *nanos) {
@@ -270,25 +270,21 @@ int sys_ttyname(int fd, char *buf, size_t size) {
 
 uid_t sys_getuid()
 {
-    // TODO: not supported yet
-    return 0;
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_UID);
 }
 
 gid_t sys_getgid()
 {
-    // TODO: not supported yet
-    return 0;
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_GID);
 }
 
 uid_t sys_geteuid()
 {
-    // TODO: not supported yet
     return sys_getuid();
 }
 
 gid_t sys_getegid()
 {
-    // TODO: not supported yet
     return sys_getgid();
 }
 

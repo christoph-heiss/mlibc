@@ -44,7 +44,7 @@ int sys_open(const char *path, int flags, int *fd) {
     int ret = __sq_syscall3(SQ_SYS_open, (__sq_u64)path, flags, 0);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *fd = ret;
@@ -55,7 +55,7 @@ int sys_read(int fd, void *buffer, size_t size, ssize_t *bytes_read) {
     ssize_t ret = __sq_syscall3(SQ_SYS_read, fd, (__sq_u64)buffer, size);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *bytes_read = ret;
@@ -66,7 +66,7 @@ int sys_write(int fd, const void *buffer, size_t size, ssize_t *bytes_written) {
     ssize_t ret = __sq_syscall3(SQ_SYS_write, fd, (__sq_u64)buffer, size);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *bytes_written = ret;
@@ -95,7 +95,7 @@ int sys_seek(int fd, off_t offset, int whence, off_t *new_offset) {
     ssize_t ret = __sq_syscall3(SQ_SYS_seek, fd, (__sq_u64)offset, whence);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *new_offset = ret;
@@ -128,7 +128,7 @@ int sys_vm_map(void *hint, size_t size, int prot, int flags, int fd,
     ssize_t ret = __sq_syscall6(SQ_SYS_mmap, fd, (__sq_u64)hint, offset, size, prot, sq_flags);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *window = reinterpret_cast<void*>(ret);
@@ -146,7 +146,7 @@ int sys_anon_allocate(size_t size, void **pointer) {
                                 SQ_MMAP_ANONYMOUS | SQ_MMAP_ADJUST_HEAP);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *pointer = reinterpret_cast<void*>(ret);
@@ -194,7 +194,7 @@ int sys_stat(fsfd_target fsfdt, int fd, const char *path, int flags, struct stat
     int ret = __sq_syscall4(SQ_SYS_stat, fd, (__sq_u64)path, flags, (__sq_u64)&sq_statbuf);
 
     if (ret != 0) {
-        return -1; /* TODO: translate errno */
+        return -ret;
     }
 
     /* translate our struct __sq_sys_stat to the proper struct stat */
@@ -225,7 +225,7 @@ int sys_fork(pid_t *child) {
     int ret = __sq_syscall1(SQ_SYS_clone, 0);
 
     if (ret < 0) {
-        return ret;
+        return -ret;
     }
 
     *child = ret;

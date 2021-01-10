@@ -1,5 +1,5 @@
-#ifndef __SQUIID_USER_AUXV_H__
-#define __SQUIID_USER_AUXV_H__
+#ifndef _ABIBITS_AUXV_H
+#define _ABIBITS_AUXV_H
 
 #define AT_NULL      0 /* end of auxv */
 #define AT_PHDR      1 /* program headers */
@@ -9,4 +9,4 @@
 #define AT_EXECFN    5 /* pointer to exec pathname */
 #define AT_RANDOM    6 /* pointer to random 16-byte value */
 
-#endif /* __SQUIID_USER_AUXV_H__ */
+#endif // _ABIBITS_AUXV_H */

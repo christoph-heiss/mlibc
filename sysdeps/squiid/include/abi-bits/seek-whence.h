@@ -1,1 +1,1 @@
-../../../../abis/mlibc/seek-whence.h
+../../../../abis/squiid/seek-whence.h

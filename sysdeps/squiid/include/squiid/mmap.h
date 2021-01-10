@@ -15,5 +15,7 @@
 #define SQ_MMAP_ADJUST_HEAP 0x2
 #define SQ_MMAP_UNMAP       0x4
 #define SQ_MMAP_FIXED       0x8
+#define SQ_MMAP_PRIVATE     0x10
+#define SQ_MMAP_SHARED      0x20
 
 #endif /* __SQUIID_USER_MMAP_H__ */

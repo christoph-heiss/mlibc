@@ -1,14 +1,14 @@
-#include <mlibc/all-sysdeps.hpp>
+#include <errno.h>
 #include <string.h>
-#include <bits/ensure.h>
 #include <unistd.h>
+
+#include <bits/ensure.h>
+#include <mlibc/all-sysdeps.hpp>
 
 #include <squiid/syscall_wrappers_x86_64.h>
 #include <squiid/mmap.h>
 #include <squiid/process.h>
 #include <squiid/stat.h>
-
-#define STUB_ONLY { __ensure(!"STUB_ONLY function was called"); __builtin_unreachable(); }
 
 namespace mlibc {
 
@@ -74,22 +74,8 @@ int sys_write(int fd, const void *buffer, size_t size, ssize_t *bytes_written) {
 }
 
 int sys_seek(int fd, off_t offset, int whence, off_t *new_offset) {
-    switch (whence) {
-    case SEEK_SET:
-        whence = SQ_SEEK_SET;
-        break;
-
-    case SEEK_CUR:
-        whence = SQ_SEEK_RELATIVE;
-        break;
-
-    case SEEK_END:
-        __ensure(!"SEEK_END not implemented yet");
-        break;
-
-    default:
-        __ensure(!"Unknown seek-whence value");
-        break;
+    if (whence == SEEK_END) {
+        return -ENOTSUP;
     }
 
     ssize_t ret = __sq_syscall3(SQ_SYS_seek, fd, (__sq_u64)offset, whence);
@@ -105,27 +91,7 @@ int sys_seek(int fd, off_t offset, int whence, off_t *new_offset) {
 int sys_vm_map(void *hint, size_t size, int prot, int flags, int fd,
                off_t offset, void **window
 ) {
-    /* our SQ_PROT_* are the same as defined in abis/mlibc/vm-flags.h,
-     * so no need to convert them
-     */
-
-    /* this flag is not supported yet */
-    __ensure(!(flags & MAP_SHARED));
-
-    int sq_flags = 0;
-    if (flags & MAP_FIXED) {
-        sq_flags |= SQ_MMAP_FIXED;
-    }
-
-    if (flags & MAP_ANONYMOUS) {
-        sq_flags |= SQ_MMAP_ANONYMOUS;
-    }
-
-    if (flags & MAP_PRIVATE) {
-        /* for now is implicit */
-    }
-
-    ssize_t ret = __sq_syscall6(SQ_SYS_mmap, fd, (__sq_u64)hint, offset, size, prot, sq_flags);
+    ssize_t ret = __sq_syscall6(SQ_SYS_mmap, fd, (__sq_u64)hint, offset, size, prot, flags);
 
     if (ret < 0) {
         return -ret;
@@ -137,13 +103,13 @@ int sys_vm_map(void *hint, size_t size, int prot, int flags, int fd,
 
 int sys_vm_unmap(void *pointer, size_t size) {
     return __sq_syscall6(SQ_SYS_mmap, SQ_MMAP_FD_NONE, (__sq_u64)pointer,
-                         0, size, 0, SQ_MMAP_UNMAP | SQ_MMAP_FIXED);
+                         0, size, 0, SQ_MMAP_UNMAP | SQ_MMAP_FIXED | SQ_MMAP_PRIVATE);
 }
 
 int sys_anon_allocate(size_t size, void **pointer) {
     ssize_t ret = __sq_syscall6(SQ_SYS_mmap, SQ_MMAP_FD_NONE, 0, 0,
                                 (__sq_u32)size, SQ_PROT_READ | SQ_PROT_WRITE,
-                                SQ_MMAP_ANONYMOUS | SQ_MMAP_ADJUST_HEAP);
+                                SQ_MMAP_ANONYMOUS | SQ_MMAP_PRIVATE | SQ_MMAP_ADJUST_HEAP);
 
     if (ret < 0) {
         return -ret;
@@ -250,6 +216,7 @@ pid_t sys_getppid() {
 }
 
 int sys_clock_get(int clock, time_t *secs, long *nanos) {
+    // TODO: not supported yet
     *secs = 0;
     *nanos = 0;
 

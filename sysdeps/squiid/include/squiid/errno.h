@@ -1,5 +1,7 @@
-#ifndef _ABIBITS_ERRNO_H
-#define _ABIBITS_ERRNO_H
+#ifndef __SQUIID_USER_ERRNO_H__
+#define __SQUIID_USER_ERRNO_H__
+
+/* Keep in sync with src/include/kernel/errno.h */
 
 #define E2BIG             1  /* Argument list too long. */
 #define EACCES            2  /* Permission denied. */
@@ -84,4 +86,4 @@
 
 #define EWOULDBLOCK EGAIN
 
-#endif // _ABIBITS_ERRNO_H
+#endif /* __SQUIIID_USER_ERRNO_H__ */

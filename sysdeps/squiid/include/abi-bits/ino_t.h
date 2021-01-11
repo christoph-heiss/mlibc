@@ -1,1 +1,1 @@
-../../../../abis/mlibc/ino_t.h
+../../../../abis/squiid/ino_t.h

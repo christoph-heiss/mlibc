@@ -74,10 +74,6 @@ int sys_write(int fd, const void *buffer, size_t size, ssize_t *bytes_written) {
 }
 
 int sys_seek(int fd, off_t offset, int whence, off_t *new_offset) {
-    if (whence == SEEK_END) {
-        return -ENOTSUP;
-    }
-
     ssize_t ret = __sq_syscall3(SQ_SYS_seek, fd, (__sq_u64)offset, whence);
 
     if (ret < 0) {

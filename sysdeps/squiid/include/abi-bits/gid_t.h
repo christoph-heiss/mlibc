@@ -1,1 +1,1 @@
-../../../../abis/mlibc/gid_t.h
+../../../../abis/squiid/gid_t.h

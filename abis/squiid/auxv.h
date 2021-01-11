@@ -9,4 +9,4 @@
 #define AT_EXECFN    5 /* pointer to exec pathname */
 #define AT_RANDOM    6 /* pointer to random 16-byte value */
 
-#endif // _ABIBITS_AUXV_H */
+#endif // _ABIBITS_AUXV_H

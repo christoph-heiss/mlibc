@@ -1,1 +1,1 @@
-../../../../abis/mlibc/blkcnt_t.h
+../../../../abis/squiid/blkcnt_t.h

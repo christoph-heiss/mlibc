@@ -1,1 +1,1 @@
-../../../../abis/mlibc/mode_t.h
+../../../../abis/squiid/mode_t.h

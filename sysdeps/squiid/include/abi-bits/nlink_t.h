@@ -1,1 +1,1 @@
-../../../../abis/mlibc/nlink_t.h
+../../../../abis/squiid/nlink_t.h

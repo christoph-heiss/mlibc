@@ -28,6 +28,7 @@ typedef signed int         __sq_s32;
 typedef unsigned int       __sq_u32;
 typedef signed long long   __sq_s64;
 typedef unsigned long long __sq_u64;
+typedef unsigned long      __sq_addr;
 
 #endif /* __ASSEMBLER__ */
 

@@ -24,7 +24,7 @@ void sys_libc_panic() {
 }
 
 int sys_tcb_set(void *pointer) {
-    return __sq_syscall2(SQ_SYS_prctl, SQ_PR_ARCH_X86_64_SET_FS, (__sq_u64)pointer);
+    return __sq_syscall2(SQ_SYS_prctl, SQ_PRCTL_ARCH_X86_64_SET_FS, (__sq_u64)pointer);
 }
 
 int sys_futex_wait(int *pointer, int expected) {
@@ -203,14 +203,6 @@ void sys_exit(int code) {
     __builtin_trap();
 }
 
-pid_t sys_getpid() {
-    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PID);
-}
-
-pid_t sys_getppid() {
-    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PPID);
-}
-
 int sys_clock_get(int clock, time_t *secs, long *nanos) {
     // TODO: not supported yet
     *secs = 0;
@@ -229,6 +221,15 @@ int sys_ttyname(int fd, char *buf, size_t size) {
     strncpy(buf, "/dev/console", size);
 
     return 0;
+}
+
+pid_t sys_getpid()
+{
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PID);
+}
+
+pid_t sys_getppid() {
+    return __sq_syscall1(SQ_SYS_getid, SQ_GETID_PPID);
 }
 
 uid_t sys_getuid()

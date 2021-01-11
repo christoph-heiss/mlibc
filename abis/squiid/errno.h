@@ -82,6 +82,6 @@
 #define ETXTBSY          79  /* Text file busy. */
 #define EXDEV            80  /* Cross-device link. */
 
-#define EWOULDBLOCK EGAIN
+#define EWOULDBLOCK EAGAIN
 
 #endif // _ABIBITS_ERRNO_H

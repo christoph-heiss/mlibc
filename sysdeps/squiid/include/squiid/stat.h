@@ -1,8 +1,6 @@
 #ifndef __SQUIID_USER_STAT_H__
 #define __SQUIID_USER_STAT_H__
 
-#include "syscalls.h"
-
 /* SQ_SYS_open flags */
 #define SQ_OPEN_WRITEONLY 0x02
 #define SQ_OPEN_READWRITE 0x04
@@ -59,6 +57,8 @@
 #define _SQ_PATH_MAX 2048
 
 #ifndef __ASSEMBLER__
+
+#include "syscalls.h"
 
 struct __sq_timespec {
         __sq_u64 secs;

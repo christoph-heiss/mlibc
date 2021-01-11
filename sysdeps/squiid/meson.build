@@ -37,6 +37,7 @@ if not no_headers
 	)
 	install_headers(
 		'include/squiid/auxv.h',
+		'include/squiid/errno.h',
 		'include/squiid/mmap.h',
 		'include/squiid/process.h',
 		'include/squiid/stat.h',

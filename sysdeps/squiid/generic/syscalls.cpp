@@ -252,6 +252,22 @@ gid_t sys_getegid()
     return sys_getgid();
 }
 
+int sys_sigaction(int number, const struct sigaction *__restrict action,
+                  struct sigaction *__restrict saved_action) {
+    __sq_sys_set_signalaction_info sigact_info;
+    sigact_info.signal_nr = number;
+    sigact_info.action = (__sq_addr)action;
+    sigact_info.old_action = (__sq_addr)saved_action;
+
+    int ret = __sq_syscall2(SQ_SYS_prctl, SQ_PRCTL_SET_SIGNALACTION, (__sq_u64)&sigact_info);
+
+    if (ret < 0) {
+        return -ret;
+    }
+
+    return 0;
+}
+
 #endif // !MLIBC_BUILDING_RTDL
 
 } // namespace mlibc
